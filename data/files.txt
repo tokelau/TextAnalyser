@@ -1,0 +1,3 @@
+C:/Users/AvadaCedavra/Desktop/Новый текстовый документ (3).txt&&?Новый текстовый документ (3).txt&&?01.04.2019&&?voc volume&&?lex rich&&?harmonic_center_1&&?harmonic_center_2
+C:/Users/AvadaCedavra/Documents/build-analyser-Desktop_Qt_5_11_1_MSVC2015_32bit-Release/files.txt&&?files.txt&&?01.04.2019&&?voc volume&&?lex rich&&?harmonic_center_1&&?harmonic_center_2
+C:/Users/AvadaCedavra/Desktop/123.txt&&?123.txt&&?01.04.2019&&?voc volume&&?lex rich&&?harmonic_center_1&&?harmonic_center_2
