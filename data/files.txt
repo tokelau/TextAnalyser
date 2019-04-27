@@ -1,3 +1,5 @@
-C:/Users/AvadaCedavra/Desktop/РќРѕРІС‹Р№ С‚РµРєСЃС‚РѕРІС‹Р№ РґРѕРєСѓРјРµРЅС‚ (3).txt&&?РќРѕРІС‹Р№ С‚РµРєСЃС‚РѕРІС‹Р№ РґРѕРєСѓРјРµРЅС‚ (3).txt&&?01.04.2019&&?voc volume&&?lex rich&&?harmonic_center_1&&?harmonic_center_2
-C:/Users/AvadaCedavra/Documents/build-analyser-Desktop_Qt_5_11_1_MSVC2015_32bit-Release/files.txt&&?files.txt&&?01.04.2019&&?voc volume&&?lex rich&&?harmonic_center_1&&?harmonic_center_2
-C:/Users/AvadaCedavra/Desktop/123.txt&&?123.txt&&?01.04.2019&&?voc volume&&?lex rich&&?harmonic_center_1&&?harmonic_center_2
+C:/Users/AvadaCedavra/Documents/tyu.txt&&?tyu.txt&&?28.04.2019&&?2&&?1.41421&&?1&&?т&&?т. е.&&?1&&?т&&?т. е.
+C:/Users/AvadaCedavra/Documents/build-analyser2-Desktop_Qt_5_11_1_MSVC2015_32bit-Release/dct1.txt&&?dct1.txt&&?28.04.2019&&?4&&?2&&?2&&?скарабей&&?воробей скарабей октябрь лес&&?2&&?скарабей&&?воробей скарабей октябрь лес
+C:/Users/AvadaCedavra/Documents/123.txt&&?123.txt&&?28.04.2019&&?1&&?0.0909091&&?74&&?дрозды&&?Дрозды.&&?47&&?рябиной&&?Кружились над Рябиной.
+C:/Users/AvadaCedavra/Documents/yui.txt&&?yui.txt&&?28.04.2019&&?4&&?2&&?2&&?сказал&&?приветик, сказал он. - Дела??!&&?2&&?сказал&&?приветик, сказал он. - Дела??!
+C:/Users/AvadaCedavra/Documents/build-analyser2-Desktop_Qt_5_11_1_MSVC2015_32bit-Release/dct.txt&&?dct.txt&&?25.04.2019&&?4&&?2&&?2&&?рябчики&&?чащу рябчики мороз октябрь&&?2&&?рябчики&&?чащу рябчики мороз октябрь

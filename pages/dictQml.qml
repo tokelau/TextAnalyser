@@ -152,7 +152,7 @@ Page {
                     width: getTextAreaWidth() - 30
                     height: getTextAreaHeight()
                     wrapMode: Text.Wrap
-                    font.pixelSize: 15
+                    font.pixelSize: 14
 
                     text: ""
                  }
@@ -161,6 +161,7 @@ Page {
             background: Rectangle {
                 height: parent.height
                 width: parent.width
+
             }
         }
         //боковая панель

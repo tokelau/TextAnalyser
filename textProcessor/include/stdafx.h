@@ -199,8 +199,8 @@ public:
 		list<wstring> ser;
 		wstring word = L"";
 
-		wofstream res("result.txt");
-		res.imbue(locale("rus_rus.1251"));
+		//wofstream res("result.txt");
+		//res.imbue(locale("rus_rus.1251"));
 
 		while (!dict.eof()) {
 			wchar_t ch = dict.get();
@@ -270,7 +270,6 @@ public:
 			}
 		}
 		in.close();
-		res << "txt cleared size: " << text.clearedText.size() << endl;
 		if (text.clearedText.size() > 1) {
 			//удаляем служебные
 			for (list<list<wstring>>::iterator it = service.begin(); it != service.end(); it++) {
@@ -304,7 +303,7 @@ public:
 					//res << endl;
 				}
 			}
-			res << "without service: " << text.clearedText.size() << endl;
+			//res << "without service: " << text.clearedText.size() << endl;
 
 			//убираем окончания
 			text.abb = text.clearedText;
@@ -331,8 +330,6 @@ public:
 			//}
 
 			textVolume = text.clearedText.size();
-			res << "textVolume: " << textVolume << endl;
-			res << "uniqSize: " << uniqVolume << endl;
 			//for (unordered_set<wstring>::iterator it = unique.begin(); it != unique.end(); it++) {
 			//	res << (*it) << endl;
 			//}
@@ -355,7 +352,7 @@ public:
 			hc2.sent = L"";
 			hc2.word = L"";
 		}
-		res.close();
+		//res.close();
 	}
 	wstring toAbb(wstring full) {
 		setlocale(LC_ALL, "Russian");

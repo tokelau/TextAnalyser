@@ -38,6 +38,18 @@ public:
         delete f;
     }
 
+    Q_INVOKABLE QString getAboutContent() {
+        QFile* file = new QFile(QDir::currentPath() + "/data/about.html");
+        if (!file->open(QIODevice::ReadOnly)) {
+            return "";
+        }
+
+        QTextStream stream(file);
+        QString text = file->readAll();
+        file->close();
+//        setFileName(fileName);
+        return text;
+    }
     Q_INVOKABLE QString getFileContent(const QString& str) {
         QString fileName;
         if (str.contains("///")) {
@@ -83,12 +95,10 @@ public:
         }
         QFile* file = new QFile(filePath);
         if (!file->open(QIODevice::ReadWrite)) {
-            qDebug() <<"didn't open" <<endl;
             return "";
         }
         QString text = file->readAll();
         if (text.isEmpty()) {
-            ///qDebug() << "1";
         } else {
         }
         file->close();

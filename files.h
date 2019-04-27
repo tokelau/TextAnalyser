@@ -90,7 +90,7 @@ public:
         QString dict = QDir::currentPath() + "/data/dict.txt";
 //        qDebug() << QDir::currentPath();
         TextProcessor tp(filePath.toStdWString(), dict.toStdWString());
-        qDebug() << tp.text.clearedText.size();
+//        qDebug() << tp.text.clearedText.size();
         list.push_back(QString::number(tp.uniqVolume));
         list.push_back(QString::number(tp.lexWealth));
         list.push_back(QString::number(tp.hc1.pos));

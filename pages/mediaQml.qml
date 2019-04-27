@@ -6,7 +6,7 @@ Page {
     width: column.width
 
     Label {
-        text: "Извините, страница находится в разработке."
+        text: "Раздел находится в разработке."
         anchors.centerIn: parent
     }
 }

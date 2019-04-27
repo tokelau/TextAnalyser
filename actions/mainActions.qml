@@ -125,7 +125,7 @@ Pane {
         folder: StandardPaths.standardLocations(StandardPaths.DocumentsLocation)[0]
         nameFilters: ["Текст (*.txt)"]
         onAccepted: {
-            console.log(addFileDialog.fileUrl)
+//            console.log(addFileDialog.fileUrl)
             textEdit.text = textHandler.addFile(addFileDialog.fileUrl.toString());
         }
     }

@@ -179,6 +179,7 @@ Page {
                     wrapMode: TextEdit.Wrap
                     selectionColor: "#535353"
                     selectByMouse: true
+                    font.pixelSize: 14
 
                     text: ""
                  }
@@ -353,7 +354,7 @@ Page {
         title: "Выберите словарь"
         nameFilters: ["Текст (*.txt)"]
         onAccepted: {
-            console.log(fPath)
+//            console.log(fPath)
             textHandler.countByDict(dictDialog.fileUrl.toString(), fPath)
             dictOk.open()
         }
@@ -367,6 +368,4 @@ Page {
         }
     }
 }
-
-
 
