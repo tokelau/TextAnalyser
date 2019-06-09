@@ -27,9 +27,9 @@
 using namespace std;
 
 struct Text {
-	vector<wstring> text;
-	vector<wstring> clearedText; //без служебных, просто обрезаны
-	vector<wstring> abb; //с операцией стемминга, без служебных
+	vector<wstring> text; //исходный текст без преобразований
+	vector<wstring> clearedText; //удалены служебные, выделены слова
+	vector<wstring> abb; //применен стемминг к clearedText
 };
 
 struct HarmCenter {
@@ -77,9 +77,6 @@ private:
 	}
 	// 1 - символ cur стоит в начале предложени€
 	bool checkStart(wchar_t cur, wchar_t prev) {
-		if ((int)cur == 96 || (int)cur == 97) {
-			return 0;
-		}
 		if ((cur >= L'ј' && cur <= L'я') || cur == L'®') {
 			if (prev == L'.' || prev == L'?' || prev == L'!' || prev == L'Е') {
 				return 1;
@@ -141,40 +138,50 @@ private:
 			pos++;
 		}
 		pos = pos - 1;
-		//out << "pos: " << --pos << endl;
-		//pos = count;
-		wstring sentence = text.text[pos];
-		//hc.word = sentence;
+		wstring sentence = L"";
 		//склеиваем начало
-		if (pos != 0) {
-			for (int i = pos; i > 0; i--) {
-				wchar_t cur = text.text[i][0]; //первый символ текущего слова 
-				wchar_t end = text.text[i - 1][text.text[i - 1].length() - 1]; //последний предыдущего
-				if (checkStart(cur, end)) {
+		if (pos != 0) {	
+			int dist = 0; //рассто€ние от символа-слова до провер€емого слова
+			for (int i = pos; i >= 0; i--) {
+				if (i - dist < 0) {
 					break;
 				}
-				sentence = text.text[i - 1] + L' ' + sentence;
+				if (isWordSymb(text.text[i])) {
+					sentence = text.text[i] + L' ' + sentence;
+					dist++;
+					continue;
+				} 
+				wchar_t cur = text.text[i][text.text[i].length() - 1]; //первый символ текущего слова 
+				wchar_t next = text.text[i + dist + 1][0]; //последний предыдущего
+				if (checkStart(next, cur)) {
+					break;
+				}
+				sentence = text.text[i] + L' ' + sentence;
+				dist = 0;
 			}
 		}
+		else {
+			sentence = text.text[0];
+		}
 		//склеиваем конец
-		//wchar_t cur = sentence[sentence.length() - 1];
-		//wchar_t next = text.text[i + 1][0];
-		//if (sentence[sentence.length() - 1])
 		int len = text.text.size(); //это счет начина€ с единицы
-		for (int i = pos; i < len; i++) {
-			if (i != pos) {
+		int dist = 0;
+		for (int i = pos + 1; i < len; i++) {
+			if (isWordSymb(text.text[i])) {
 				sentence = sentence + L' ' + text.text[i];
+				dist++;
+				continue;
 			}
-			if (i != (len - 1)) {
-				wchar_t cur = text.text[i][text.text[i].length() - 1];
-				wchar_t next = text.text[i + 1][0];
-				if (checkEnd(cur, next)) {
-					break;
+			wchar_t cur = text.text[i][0];
+			wchar_t prev = text.text[i - dist - 1][text.text[i - dist - 1].length() - 1];
+			if (checkStart(cur, prev)) {
+				if (isWordSymb(L"" + sentence[sentence.length() - 1])) {
+					sentence.erase(sentence.length() - 3, 2);
 				}
-			}
-			else {
 				break;
 			}
+			sentence = sentence + L' ' + text.text[i];
+			dist = 0;
 		}
 		hc.sent = sentence;
 		//out.close();
@@ -198,9 +205,6 @@ public:
 		dict.imbue(locale("rus_rus.1251"));
 		list<wstring> ser;
 		wstring word = L"";
-
-		//wofstream res("result.txt");
-		//res.imbue(locale("rus_rus.1251"));
 
 		while (!dict.eof()) {
 			wchar_t ch = dict.get();
@@ -226,6 +230,7 @@ public:
 		wordSymbols.insert(wstring(L"") + ((wchar_t)150)); //тире
 		wordSymbols.insert(wstring(L"") + ((wchar_t)151)); //тире 
 		wordSymbols.insert(wstring(L"") + ((wchar_t)45)); //минус
+		wordSymbols.insert(wstring(L"") + (L'Ц'));
 
 		//загружаем текст
 		word = L"";

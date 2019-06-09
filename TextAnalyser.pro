@@ -1,4 +1,4 @@
-QT += quick
+QT += quick qml
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -43,4 +43,7 @@ win32: LIBS += -L$$PWD/textProcessor/bin/Debug/ -lTextProcessor
 
 INCLUDEPATH += $$PWD/textProcessor/include
 DEPENDPATH += $$PWD/textProcessor/include
+
+DISTFILES += \
+    analyse.qml
 

@@ -44,5 +44,6 @@
         <file>files.h</file>
         <file>icons/icons8-news-24.png</file>
         <file>actions/dictsActions.qml</file>
+        <file>analyse.qml</file>
     </qresource>
 </RCC>

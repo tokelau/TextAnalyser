@@ -9,6 +9,7 @@ class FileParams : public QObject
 {
     Q_OBJECT
 public:
+    Q_PROPERTY(QString textVol READ textVol NOTIFY textVolChanged)
     Q_PROPERTY(QString uniqVol READ uniqVol NOTIFY uniqVolChanged)
     Q_PROPERTY(QString lexWealth READ lexWealth NOTIFY lexWealthChanged)
 
@@ -24,19 +25,21 @@ public:
     {
         if (!data.isEmpty()) {
 //            qDebug() << data;
-            m_nUniqVol = data[3];
-            m_nLexWealth = data[4];
+            m_nTextVol = data[3];
+            m_nUniqVol = data[4];
+            m_nLexWealth = data[5];
 
-            m_nHC1pos = data[5];
-            m_nHC1word = data[6];
-            m_nHC1sentense = data[7];
+            m_nHC1pos = data[6];
+            m_nHC1word = data[7];
+            m_nHC1sentense = data[8];
 
-            m_nHC2pos = data[8];
-            m_nHC2word = data[9];
-            m_nHC2sentense = data[10];
+            m_nHC2pos = data[9];
+            m_nHC2word = data[10];
+            m_nHC2sentense = data[11];
         }
     }
 
+    QString m_nTextVol;
     QString m_nUniqVol;
     QString m_nLexWealth;
 
@@ -49,6 +52,9 @@ public:
     QString m_nHC2sentense;
 
     //возвращает переменную
+    QString textVol() const {
+        return m_nTextVol;
+    }
     QString uniqVol() const {
         return m_nUniqVol;
     }
@@ -78,6 +84,7 @@ public:
 private:
 
 signals:
+    void textVolChanged(QString);
     void uniqVolChanged(QString);
     void lexWealthChanged(QString);
 

@@ -91,6 +91,7 @@ public:
 //        qDebug() << QDir::currentPath();
         TextProcessor tp(filePath.toStdWString(), dict.toStdWString());
 //        qDebug() << tp.text.clearedText.size();
+        list.push_back(QString::number(tp.textVolume));
         list.push_back(QString::number(tp.uniqVolume));
         list.push_back(QString::number(tp.lexWealth));
         list.push_back(QString::number(tp.hc1.pos));
@@ -99,6 +100,7 @@ public:
         list.push_back(QString::number(tp.hc2.pos));
         list.push_back(QString::fromStdWString(tp.hc2.word));
         list.push_back(QString::fromStdWString(tp.hc2.sent));
+
 //        filesHash->
         filesHash.insert(filePath, list);
 
