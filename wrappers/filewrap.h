@@ -1,5 +1,5 @@
-#ifndef TEXTHANDLER_H
-#define TEXTHANDLER_H
+#ifndef FILEWRAP_H
+#define FILEWRAP_H
 
 #include <QtCore>
 #include <QFile>
@@ -11,17 +11,14 @@
 #include "fileitem.h"
 #include "files.h"
 #include "fileparams.h"
-#include "dicthandler.h"
-//#include "textProcessor/include/stdafx.h"
+#include "wrappers/dictwrap.h"
 
-class TextHandler : public QObject
-{
+class FileWrap: public QObject {
     Q_OBJECT
 private:
     Q_PROPERTY(QString curFile READ curFile WRITE setCurFile NOTIFY curFileChanged)
     Q_PROPERTY(QVariant dataList READ dataList WRITE setDataList NOTIFY dataListChanged)
     Q_PROPERTY(QVariant params READ params NOTIFY paramsChanged)
-//    qlonglong m_nFileState;
 
     QString m_nCurFile;
     QVariant m_nDataList;
@@ -29,15 +26,22 @@ private:
     QList<QString> data;
     Files* f;
 
-public:
-    TextHandler(QObject* pobj = nullptr) : QObject(pobj) {
-        f = new Files;
-        m_nCurFile = "";
+    QString getFilePath(QString str) {
+        QString filePath;
+        if (str.contains("///")) {
+            filePath = str.right(str.length() - str.indexOf("///") - 3);
+        } else {
+            filePath = str;
+        }
+        return filePath;
     }
-    ~TextHandler() {
+public:
+    FileWrap(QObject* pobj = nullptr) : QObject(pobj), m_nCurFile(""), f(new Files) {}
+    ~FileWrap() {
         delete f;
     }
 
+    //возвращает текст для раздела "Справка"
     Q_INVOKABLE QString getAboutContent() {
         QFile* file = new QFile(QDir::currentPath() + "/data/about.html");
         if (!file->open(QIODevice::ReadOnly)) {
@@ -47,18 +51,12 @@ public:
         QTextStream stream(file);
         QString text = file->readAll();
         file->close();
-//        setFileName(fileName);
         return text;
     }
     Q_INVOKABLE QString getFileContent(const QString& str) {
-        QString fileName;
-        if (str.contains("///")) {
-            fileName = str.right(str.length() - str.indexOf("///") - 3);
-        } else {
-            fileName = str;
-        }
+        QString filePath = getFilePath(str);
 
-        QFile* file = new QFile(fileName);
+        QFile* file = new QFile(filePath);
         if (!file->open(QIODevice::ReadOnly)) {
             return "";
         }
@@ -67,32 +65,23 @@ public:
         stream.setCodec("Windows-1251");
         QString text = stream.readAll();
         file->close();
-//        setFileName(fileName);
         return text;
     }
+    //есть ли файл в папке?
     Q_INVOKABLE bool isFileCreated(const QString& fPath, const QString& fName) {
-        QString filePath;
-        if (fPath.contains("///")) {
-            filePath = fPath.right(fPath.length() - fPath.indexOf("///") - 3);
-        } else {
-            filePath = fPath;
-        }
+        QString filePath = getFilePath(fPath);
+
         QDir dir(filePath);
         QStringList entry = dir.entryList();
-//        qDebug() << entry <<endl;
-//        qDebug() << fName <<endl;
         if (entry.contains(fName)) {
             return true;
         }
         return false;
     }
+    //добавть файл в приложение
     Q_INVOKABLE QString addFile(const QString& str) {
-        QString filePath;
-        if (str.contains("///")) {
-            filePath = str.right(str.length() - str.indexOf("///") - 3);
-        } else {
-            filePath = str;
-        }
+        QString filePath = getFilePath(str);
+
         QFile* file = new QFile(filePath);
         if (!file->open(QIODevice::ReadWrite)) {
             return "";
@@ -105,9 +94,6 @@ public:
         if (!f->addToFiles(filePath)) {
             emit dataListChanged(dataList());
         }
-//        emit dataListChanged(dataList());
-
-//        qDebug
         return text;
     }
     Q_INVOKABLE qlonglong saveFile(const QString& fPath, const QString& content) {
@@ -136,47 +122,40 @@ public:
         f->removeFromFiles(fPath);
         emit dataListChanged(dataList());
     }
-    Q_INVOKABLE void countByDict(const QString& dictPath, const QString& fPath) {
-        QString dPath;
-        if (dictPath.contains("///")) {
-            dPath = dictPath.right(dictPath.length() - dictPath.indexOf("///") - 3);
-        }
+    Q_INVOKABLE void countByDict(const QString& dictName, const QString& fPath) {
+        QString dPath = DictWrap::getDictsPath() + dictName + "/" + dictName + ".txt";
 
-        QString oPath = QDir::currentPath() + "/data/dictionaries";
+        QString oPath = DictWrap::getDictsPath() + dictName + "/" + "files/";
+//        qDebug()<<fPath;
+//        qDebug()<<dPath;
+//        qDebug()<<oPath;
         QDir d(oPath);
         QStringList lst = d.entryList();
         QString fName = fPath.right(fPath.length() - fPath.lastIndexOf("/") - 1);
-        QString name = "res_" + fName;
-        if (lst.contains("res_" + fName)) {
+        QString name = fName;
+        if (lst.contains(fName)) {
             for(int i = 1;; i++) {
-                name = "res_" + fName.left(fName.lastIndexOf(".")) + "(" + QString::number(i) + ").txt";
+                name = fName.left(fName.lastIndexOf(".")) + "(" + QString::number(i) + ").txt";
                 if (!lst.contains(name)) {
-                    oPath += "/" + name;
+                    oPath += name;
                     break;
                 }
             }
         } else {
-            oPath += "/res_" + fName;
+            oPath += fName;
         }
-//        qDebug() << oPath << endl;
+//        qDebug() << "oPath "<< oPath << endl;
         f->countByDict(fPath, dPath, oPath);
-        DictHandler dct;
-        dct.addToDicts(name);
-//        dct.setFilesList(name);
+        emit dataListChanged(m_nDataList);
     }
 
     //возвращает переменную
-//    QString fileName() const {
-//        return m_nFileName;
-//    }
     QString curFile() {
         emit curFileChanged(m_nCurFile);
         return m_nCurFile;
     }
     QVariant dataList() {
         QList<QObject*> list;
-//        qDebug()<< filesStack->length();
-//        qDebug() << filesHash->contains("");
         for (QStack<QString>::iterator it = f->filesStack.begin(); it != f->filesStack.end(); it++) {
             if (!((*it) == "")) {
                 list.append(new FileItem(f->filesHash.value((*it))));
@@ -214,4 +193,4 @@ signals:
 public slots:
 };
 
-#endif // TEXTHANDLER_H
+#endif // FILEWRAP_H

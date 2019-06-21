@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Dialogs 1.2
-import TextHandler 1.0
+import FileWrap 1.0
 
 Page {
     height: window.height
@@ -22,8 +22,8 @@ Page {
         return column.width - 20;
     }
 
-    TextHandler {
-        id: textHandler
+    FileWrap {
+        id: fileWrap
     }
 
     Row {
@@ -52,7 +52,7 @@ Page {
                     textFormat: Text.StyledText
                     font.pixelSize: 14
 
-                    text: textHandler.getAboutContent()
+                    text: fileWrap.getAboutContent()
                  }
              }
 

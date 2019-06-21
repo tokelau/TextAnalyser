@@ -13,7 +13,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp
+        main.cpp \
 
 RESOURCES += qml.qrc
 
@@ -31,13 +31,14 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    texthandler.h \
     fileitem.h \
     files.h \
     fileparams.h \
     dictitem.h \
-    dicthandler.h \
-    dicts.h
+    dicts.h \
+    wrappers/dictwrap.h \
+    wrappers/filewrap.h \
+    buttonitem.h
 
 win32: LIBS += -L$$PWD/textProcessor/bin/Debug/ -lTextProcessor
 
@@ -45,5 +46,7 @@ INCLUDEPATH += $$PWD/textProcessor/include
 DEPENDPATH += $$PWD/textProcessor/include
 
 DISTFILES += \
-    analyse.qml
+    analyse.qml \
+    actions/editTextActions.qml \
+    actions/editDictsActions.qml ]
 

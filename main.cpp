@@ -4,16 +4,16 @@
 #include <QQuickView>
 #include <QQmlContext>
 #include <QDebug>
-#include "texthandler.h"
-#include "dicthandler.h"
+#include "wrappers/filewrap.h"
+#include "wrappers/dictwrap.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QCoreApplication::setApplicationName("Text Analyser");
     QGuiApplication app(argc, argv);
-    qmlRegisterType<TextHandler>("TextHandler", 1, 0, "TextHandler");
-    qmlRegisterType<DictHandler>("DictHandler", 1, 0, "DictHandler");
+    qmlRegisterType<FileWrap>("FileWrap", 1, 0, "FileWrap");
+    qmlRegisterType<DictWrap>("DictWrap", 1, 0, "DictWrap");
 
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

@@ -4,7 +4,8 @@ import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Dialogs 1.2
-import TextHandler 1.0
+import FileWrap 1.0
+import DictWrap 1.0
 
 Page {
     height: window.height
@@ -14,7 +15,7 @@ Page {
     property bool _clicked: false
 
     function getTextAreaHeight() {
-        return window.height - window.header.height - 10
+        return window.height - window.header.height - 25
     }
     function getTextAreaWidth() {
         if (window.width >= 600) {
@@ -38,8 +39,8 @@ Page {
     function getWindowWidth() {
         return window.width
     }
-    TextHandler {
-        id: textHandler
+    FileWrap {
+        id: fileWrap
     }
 
     Row {
@@ -47,30 +48,45 @@ Page {
         y: 5
         spacing: 10
 
+        //список файлов
         Pane {
             id: paneItems
             height: getTextAreaHeight()
             width: getTextAreaWidth()
+
+            Label {
+                id: labelFiles
+                leftPadding: 4
+                bottomPadding: 10
+                font.pixelSize: 20
+                font.bold: true
+
+                text: "Файлы"
+
+                visible: fileWrap.dataList.length === 0 ? false : true
+            }
+
 
             //альтернативный заголовок
             Label {
                 id: label
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Загрузите или выберите файл для отображения."
-                visible: textHandler.dataList.length === 0 ? true : false
+//                text: paneActions.visible
+                visible: fileWrap.dataList.length === 0 ? true : false
             }
 
-            //список файлов
             ScrollView {
 //                id: textEdit
-                anchors.fill: parent
-                implicitHeight: getTextAreaHeight()
-                implicitWidth: getTextAreaWidth()
+//                anchors.fill: parent
+                anchors.top: labelFiles.bottom
+                implicitHeight: getTextAreaHeight() - label.height - 25
+                implicitWidth: getTextAreaWidth()-10
                 ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 //                ScrollBar.vertical.policy: ScrollBar.AlwaysOn
                 clip: true
 
-                visible: textHandler.dataList.length !== 0 ? true : false
+                visible: fileWrap.dataList.length !== 0 ? true : false
 
                 ListView {
                     id: listView
@@ -80,7 +96,7 @@ Page {
                     highlight: highlight
                         highlightFollowsCurrentItem: false
 
-                    model: textHandler.dataList
+                    model: fileWrap.dataList
                     delegate: Rectangle {
                         id: rect
                         width: getTextAreaWidth() - 30
@@ -93,10 +109,10 @@ Page {
                             hoverEnabled: true
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
                             onDoubleClicked: {
-                                textEdit.text = textHandler.getFileContent(path.text);
+                                textEdit.text = fileWrap.getFileContent(path.text);
                                 paneItems.visible = false
                                 paneText.visible = true
-                                paneActions.source = "qrc:/actions/textActions.qml"
+                                paneActions.source = "qrc:/actions/editTextActions.qml"
                             }
                             onHoveredChanged: {
                                 if (mArea.containsMouse) {
@@ -106,9 +122,9 @@ Page {
                                 }
                             }
                             onClicked: {
+                                fileWrap.curFile = path.text
                                 if (mouse.button === Qt.LeftButton) {
                                     paneAnalysis.visible = true
-                                    textHandler.curFile = path.text
                                     fName.text = name.text
                                 }
                                 if (mouse.button === Qt.RightButton) {
@@ -120,14 +136,15 @@ Page {
                                 Action {
                                     text: "Удалить"
                                     onTriggered: {
-                                        textHandler.deleteFile(path.text)
+                                        fileWrap.deleteFile(path.text)
                                     }
                                 }
                                 Action {
                                     text: "Словарь"
                                     onTriggered: {
                                         fPath = path.text
-                                        dictDialog.open()
+                                        dictsList.open()
+//                                        dictDialog.open()
                                     }
                                 }
                             }
@@ -186,7 +203,8 @@ Page {
                     text: ""
 
                     MouseArea {
-                        anchors.fill: parent
+                        width: parent.width
+                        height: getTextAreaHeight()
                         //hoverEnabled: true
                         acceptedButtons: Qt.RightButton
                         onClicked: {
@@ -208,9 +226,8 @@ Page {
                             }
                         }
                     }
-
                 }
-                 }
+           }
 
 
             background: Rectangle {
@@ -228,7 +245,7 @@ Page {
             Loader {
                 id: paneActions
                 width: 150
-                source: "qrc:/actions/mainActions.qml"
+                source: "qrc:/actions/textActions.qml"
             }
             //анализ
             Pane {
@@ -275,7 +292,7 @@ Page {
                         width: parent.width - 10
 //                            height:
                         implicitHeight: 200
-                        model: textHandler.params
+                        model: fileWrap.params
                         delegate: Column {
 //                                id: rect
                             width: parent.width - 10
@@ -321,7 +338,7 @@ Page {
             //                    font.bold: true
                                 font.pixelSize: 11
             //                    bottomPadding: 5
-                                text: model.modelData.hc1Pos
+                                text: "Позиция: " + model.modelData.hc1Pos
                             }
                             Label {
                                 width: parent.width
@@ -388,6 +405,7 @@ Page {
                 }
             }
         }
+        //анализ в большом окне
         Popup {
             id: bigAnalyse
             height: 400
@@ -437,7 +455,7 @@ Page {
                     width: parent.width - 10
 //                            height:
                     implicitHeight: 200
-                    model: textHandler.params
+                    model: fileWrap.params
                     delegate: Column {
 //                                id: rect
                         width: parent.width - 10
@@ -545,22 +563,86 @@ Page {
             }
         }
     }
-    FileDialog {
-        id: dictDialog
-        title: "Выберите словарь"
-        nameFilters: ["Текст (*.txt)"]
-        onAccepted: {
-//            console.log(fPath)
-            textHandler.countByDict(dictDialog.fileUrl.toString(), fPath)
-            dictOk.open()
+
+    DictWrap {
+        id: dictWrap
+    }
+
+    Popup {
+        id: dictsList
+        parent: Overlay.overlay
+
+        x: Math.round((parent.width - width) / 2)
+        y: Math.round((parent.height - height) / 2)
+        ScrollView {
+//            anchors.fill: parent
+            implicitHeight: 300
+            implicitWidth: 300
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+            clip: true
+            Label {
+                id: dictsListLabel
+                bottomPadding: 8
+                text: "Выберите словарь: "
+            }
+
+            ListView {
+                id: dictListView
+                anchors.top: dictsListLabel.bottom
+                width: 300
+                height: 250
+                spacing: 10
+                highlight: highlight
+                highlightFollowsCurrentItem: false
+
+                model: dictWrap.dataList
+                delegate: Rectangle {
+                    id: dictRect
+                    width: 300
+                    height: 45
+                    radius: 3
+
+                    MouseArea {
+                        id: _mArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+                        Row {
+                            anchors.centerIn: parent
+                            Column {
+                                width: 215
+                                Label {
+                                    id: dictName
+                                    topPadding: 10
+                                    text: model.modelData.name
+                                    font.pixelSize: 15
+                                }
+                            }
+                            Column {
+                                Button {
+                                    height: 40
+                                    text: qsTr("Выбрать")
+                                    font.pixelSize: 12
+
+                                    onClicked: {
+                                        //здесь я передала назваие словаря и путь к файлу
+                                        fileWrap.countByDict(dictName.text, fileWrap.curFile)
+                                        dictOk.open()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
-//            }
     Dialog {
         id: dictOk
         standardButtons: Dialog.Ok
+
         Label {
-            text: "Действие успешно завершено."
+            text: "Подсчет вхождений завершен успешно."
         }
     }
 }

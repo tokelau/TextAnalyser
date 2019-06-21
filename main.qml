@@ -66,13 +66,13 @@ ApplicationWindow {
                 source: "qrc:/pages/dictQml.qml"
                 iconSource: "qrc:/icons/icons8-news-24.png"
             }
+//            ListElement {
+//                name: "Медиа"
+//                source: "qrc:/pages/mediaQml.qml"
+//                iconSource: "qrc:/icons/icons8-music-24.png"
+//            }
             ListElement {
-                name: "Медиа"
-                source: "qrc:/pages/mediaQml.qml"
-                iconSource: "qrc:/icons/icons8-music-24.png"
-            }
-            ListElement {
-                name: "Гайды"
+                name: "Справка"
                 source: "qrc:/pages/aboutQml.qml"
                 iconSource: "qrc:/icons/icons8-bookmark-24.png"
             }

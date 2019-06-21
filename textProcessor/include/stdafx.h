@@ -28,7 +28,7 @@ using namespace std;
 
 struct Text {
 	vector<wstring> text; //исходный текст без преобразований
-	vector<wstring> clearedText; //удалены служебные, выделены слова
+	vector<wstring> clearedText; //удалены служебные
 	vector<wstring> abb; //применен стемминг к clearedText
 };
 
@@ -175,9 +175,9 @@ private:
 			wchar_t cur = text.text[i][0];
 			wchar_t prev = text.text[i - dist - 1][text.text[i - dist - 1].length() - 1];
 			if (checkStart(cur, prev)) {
-				if (isWordSymb(L"" + sentence[sentence.length() - 1])) {
-					sentence.erase(sentence.length() - 3, 2);
-				}
+				//if (isWordSymb(L"" + sentence[sentence.length() - 1])) {
+				//	sentence.erase();
+				//}
 				break;
 			}
 			sentence = sentence + L' ' + text.text[i];
@@ -545,7 +545,7 @@ public:
 			return -1;
 		}
 		for (unordered_map<wstring, int>::iterator it = count.begin(); it != count.end(); it++) {
-			out << (*it).first << L" - " << (*it).second << endl;
+			out << (*it).first << L" - " << (*it).second << L" " << (*it).second / sqrt(tp.textVolume) << endl;
 		}
 		out.close();
 		//res.close();

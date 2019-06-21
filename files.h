@@ -113,7 +113,7 @@ public:
     bool countByDict(QString fPath, QString dictPath, QString outPath) {
         QString dPath = QDir::currentPath() + "/data/dict.txt";
         TextProcessor tp(fPath.toStdWString(), dPath.toStdWString());
-        TextProcessor::countByDict(tp, dictPath.toStdWString(), outPath.toStdWString());
+        qDebug() << TextProcessor::countByDict(tp, dictPath.toStdWString(), outPath.toStdWString());
         return 0;
     }
     

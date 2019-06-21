@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Dialogs 1.2
-import DictHandler 1.0
+import DictWrap 1.0
 
 Page {
     height: window.height
@@ -16,11 +16,7 @@ Page {
     }
     function getTextAreaWidth() {
         if (window.width >= 600) {
-            if (paneText.visible) {
-                return parent.width - paneActions.width - 30;
-            } else {
-                return parent.width - 30;
-            }
+            return parent.width - paneActions.width - 30;
         }
         return column.width - 20;
     }
@@ -35,8 +31,8 @@ Page {
         }
     }
 
-    DictHandler {
-        id: dictHandler
+    DictWrap {
+        id: dictWrap
     }
 
     Row {
@@ -44,29 +40,41 @@ Page {
         y: 5
         spacing: 10
 
+        //словари
         Pane {
             id: paneItems
             height: getTextAreaHeight()
             width: getTextAreaWidth()
+
+            Label {
+                id: labelDicts
+                leftPadding: 4
+                bottomPadding: 10
+                font.pixelSize: 20
+                font.bold: true
+
+                text: "Словари"
+
+                visible: dictWrap.dataList.length === 0 ? false : true
+            }
 
             //альтернативный заголовок
             Label {
                 id: label
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Обработанных словарей пока нет."
-                visible: dictHandler.dataList.length === 0 ? true : false
+                visible: dictWrap.dataList.length === 0 ? true : false
             }
 
             ScrollView {
-//                id: textEdit
-                anchors.fill: parent
-                implicitHeight: getTextAreaHeight()
-                implicitWidth: getTextAreaWidth()
+                anchors.top: labelDicts.bottom
+                implicitHeight: getTextAreaHeight() - labelDicts.height - 25
+                implicitWidth: getTextAreaWidth() - 10
                 ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 //                ScrollBar.vertical.policy: ScrollBar.AlwaysOn
                 clip: true
 
-                visible: dictHandler.dataList.length !== 0 ? true : false
+                visible: dictWrap.dataList.length !== 0 ? true : false
 
                 ListView {
                     id: listView
@@ -76,11 +84,12 @@ Page {
                     highlight: highlight
                     highlightFollowsCurrentItem: false
 
-                    model: dictHandler.dataList
+                    model: dictWrap.dataList
                     delegate: Rectangle {
                         id: rect
+                        implicitWidth: getTextAreaWidth() - 30
                         width: getTextAreaWidth() - 30
-                        height: 70
+                        height: dictWrap.getButtonList(name.text).length !== 0 ? 105 : 70
                         radius: 6
 
                         MouseArea {
@@ -89,26 +98,34 @@ Page {
                             hoverEnabled: true
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
                             onDoubleClicked: {
-//                                textEdit.text = textHandler.getFileContent(path.text);
                                 paneItems.visible = false
                                 paneText.visible = true
-                                paneActions.visible = true
-                                textEdit.text = dictHandler.getFileContent(name.text)
+                                paneActions.source = "qrc:/actions/editDictsActions.qml"
+                                textEdit.text = dictWrap.getFileContent(name.text)
+//                                console.log(dictWrap.curFile)
                             }
-                            onHoveredChanged: {
-                                if (mArea.containsMouse) {
-                                    rect.color = "#a9a9aa"
-                                } else {
-                                    rect.color = "#ffffff"
+//                            onHoveredChanged: {
+//                                if (mArea.containsMouse) {
+//                                    rect.color = "#a9a9aa"
+//                                } else {
+//                                    rect.color = "#ffffff"
+//                                }
+//                            }
+                            onClicked: {
+                                dictWrap.curFile = name.text
+//                                console.log(dictWrap.curFile)
+                                if (mouse.button === Qt.RightButton) {
+                                    contextMenu.popup()
                                 }
                             }
+
                             Menu {
                                 id: contextMenu
                                 Action {
                                     text: "Удалить"
-//                                    onTriggered: {
-//                                        textHandler.deleteFile(path.text)
-//                                    }
+                                    onTriggered: {
+                                        dictWrap.deleteDict(name.text)
+                                    }
                                 }
 
                             }
@@ -116,16 +133,56 @@ Page {
                         Label {
                             id: name
                             topPadding: 12
-                            leftPadding: 10
+                            leftPadding: 15
                             font.bold: true
                             text: model.modelData.name
+
                         }
                         Text {
                             id: prDate
                             topPadding: 8
-                            leftPadding: 10
+                            leftPadding: 15
+                            bottomPadding: 8
                             anchors.top: name.bottom
                             text: model.modelData.prDate
+                        }
+
+                        //кнопки
+                        ListView {
+                            id: filesList
+                            anchors.top: prDate.bottom
+                            leftMargin: 15
+                            width: parent.width - 50
+                            height: 40
+                            spacing: 8
+                            highlight: highlight
+                            highlightFollowsCurrentItem: false
+                            orientation: Qt.Horizontal
+
+                            model: dictWrap.getButtonList(name.text)
+                            delegate: Rectangle {
+                                id: dictRect
+                                width: 110
+                                height: 40
+//                                radius: 3
+
+                                Button {
+                                    id: btn
+                                    anchors.fill: parent
+                                    anchors.centerIn: parent
+                                    text: model.modelData.fName
+                                    font.pixelSize: 10
+
+                                    onClicked: {
+                                        console.log(name.text + "/files/" + btn.text)
+                                        paneItems.visible = false
+                                        panePrText.visible = true
+                                        paneActions.source = "qrc:/actions/editDictsActions.qml"
+                                        console.log(dictWrap.getPrFileContent(name.text + "/files/" + btn.text))
+                                        txt.text = dictWrap.getPrFileContent(name.text + "/files/" + btn.text)
+                                    }
+                                }
+                            }
                         }
 
                     }
@@ -133,7 +190,7 @@ Page {
             }
         }
 
-        //текст
+        //текст словаря
         Pane {
             id: paneText
             height: getTextAreaHeight()
@@ -147,14 +204,49 @@ Page {
                 ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
                 clip: true
 
-                Text {
+                TextEdit {
                     id: textEdit
                     width: getTextAreaWidth() - 30
-                    height: getTextAreaHeight()
-                    wrapMode: Text.Wrap
+                    //height: getTextAreaHeight()
+                    wrapMode: TextEdit.Wrap
+                    selectionColor: "#535353"
+                    selectByMouse: true
+                    persistentSelection: true
                     font.pixelSize: 14
 
                     text: ""
+                 }
+             }
+
+            background: Rectangle {
+                height: parent.height
+                width: parent.width
+
+            }
+        }
+
+        //текст обработанный
+        Pane {
+            id: panePrText
+            height: getTextAreaHeight()
+            width: getTextAreaWidth()
+            visible: false
+
+            ScrollView {
+                anchors.fill: parent
+                implicitHeight: getTextAreaHeight()
+                implicitWidth: getTextAreaWidth()
+                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                clip: true
+
+                Text {
+                    id: txt
+                    width: getTextAreaWidth() - 30
+                    //height: getTextAreaHeight()
+                    wrapMode: Text.Wrap
+                    font.pixelSize: 14
+
+                    text: "123"
                  }
              }
 
@@ -173,7 +265,7 @@ Page {
                 id: paneActions
                 width: 150
                 source: "qrc:/actions/dictsActions.qml"
-                visible: false
+                visible: true
             }
          }
     }

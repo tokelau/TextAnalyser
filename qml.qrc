@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>actions/mainActions.qml</file>
-        <file>actions/textActions.qml</file>
         <file>icons/icons8-bookmark-24.png</file>
         <file>icons/icons8-delete-24.png</file>
         <file>icons/icons8-file-24.png</file>
@@ -17,7 +15,6 @@
         <file>pages/textQml.qml</file>
         <file>fileitem.h</file>
         <file>main.cpp</file>
-        <file>texthandler.h</file>
         <file>qtquickcontrols2.conf</file>
         <file>textProcessor/include/indexing/common_lang_constants.h</file>
         <file>textProcessor/include/indexing/string_util.h</file>
@@ -39,11 +36,13 @@
         <file>textProcessor/include/utilities/utilities.h</file>
         <file>textProcessor/include/stdafx.h</file>
         <file>textProcessor/include/targetver.h</file>
-        <file>textProcessor/include/textProcessor.h</file>
         <file>fileparams.h</file>
         <file>files.h</file>
         <file>icons/icons8-news-24.png</file>
-        <file>actions/dictsActions.qml</file>
         <file>analyse.qml</file>
+        <file>actions/dictsActions.qml</file>
+        <file>actions/editDictsActions.qml</file>
+        <file>actions/editTextActions.qml</file>
+        <file>actions/textActions.qml</file>
     </qresource>
 </RCC>
