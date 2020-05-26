@@ -16,26 +16,6 @@
         <file>fileitem.h</file>
         <file>main.cpp</file>
         <file>qtquickcontrols2.conf</file>
-        <file>textProcessor/include/indexing/common_lang_constants.h</file>
-        <file>textProcessor/include/indexing/string_util.h</file>
-        <file>textProcessor/include/stemming/danish_stem.h</file>
-        <file>textProcessor/include/stemming/dutch_stem.h</file>
-        <file>textProcessor/include/stemming/english_stem.h</file>
-        <file>textProcessor/include/stemming/finnish_stem.h</file>
-        <file>textProcessor/include/stemming/french_stem.h</file>
-        <file>textProcessor/include/stemming/german_stem.h</file>
-        <file>textProcessor/include/stemming/italian_stem.h</file>
-        <file>textProcessor/include/stemming/norwegian_stem.h</file>
-        <file>textProcessor/include/stemming/portuguese_stem.h</file>
-        <file>textProcessor/include/stemming/russian_stem.h</file>
-        <file>textProcessor/include/stemming/spanish_stem.h</file>
-        <file>textProcessor/include/stemming/stemming.h</file>
-        <file>textProcessor/include/stemming/swedish_stem.h</file>
-        <file>textProcessor/include/utilities/debug_logic.h</file>
-        <file>textProcessor/include/utilities/safe_math.h</file>
-        <file>textProcessor/include/utilities/utilities.h</file>
-        <file>textProcessor/include/stdafx.h</file>
-        <file>textProcessor/include/targetver.h</file>
         <file>fileparams.h</file>
         <file>files.h</file>
         <file>icons/icons8-news-24.png</file>
@@ -44,5 +24,6 @@
         <file>actions/editDictsActions.qml</file>
         <file>actions/editTextActions.qml</file>
         <file>actions/textActions.qml</file>
+        <file>actions/editDocxTextAction.qml</file>
     </qresource>
 </RCC>

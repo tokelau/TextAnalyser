@@ -14,6 +14,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
+    textProcessor/include_1.0/docx/duckx.cpp \
+    textProcessor/include_1.0/docx/iconvlite.cpp \
+    textProcessor/include_1.0/docx/pugixml.cpp \
+    textProcessor/include_1.0/docx/zip.c
 
 RESOURCES += qml.qrc
 
@@ -38,15 +42,37 @@ HEADERS += \
     dicts.h \
     wrappers/dictwrap.h \
     wrappers/filewrap.h \
-    buttonitem.h
+    buttonitem.h \
+    textProcessor/include_1.0/docx/duckx.hpp \
+    textProcessor/include_1.0/docx/iconvlite.h \
+    textProcessor/include_1.0/docx/miniz.h \
+    textProcessor/include_1.0/docx/pugiconfig.hpp \
+    textProcessor/include_1.0/docx/pugixml.hpp \
+    textProcessor/include_1.0/docx/zip.h \
+    wrappers/dictwrap.h \
+    wrappers/filewrap.h \
+    buttonitem.h \
+    dictitem.h \
+    dicts.h \
+    fileitem.h \
+    fileparams.h \
+    files.h
 
-win32: LIBS += -L$$PWD/textProcessor/bin/Debug/ -lTextProcessor
-
-INCLUDEPATH += $$PWD/textProcessor/include
-DEPENDPATH += $$PWD/textProcessor/include
 
 DISTFILES += \
     analyse.qml \
     actions/editTextActions.qml \
-    actions/editDictsActions.qml ]
+    actions/editDictsActions.qml ] \
+    actions/editDocxTextAction.qml \
+    actions/editDocxTextAction.qml
 
+
+win32: LIBS += -L$$PWD/textProcessor/bin/Debug/ -lTextProcessor-1.0
+
+INCLUDEPATH += $$PWD/textProcessor/include_1.0
+DEPENDPATH += $$PWD/textProcessor/include_1.0
+
+win32: LIBS += -L$$PWD/./ -llibhunspell-1.7-0
+
+INCLUDEPATH += $$PWD/textProcessor/include_1.0/hunspell
+DEPENDPATH += $$PWD/textProcessor/include_1.0/hunspell

@@ -123,7 +123,7 @@ Pane {
         id: addFileDialog
         title: "Выберите файл"
         folder: StandardPaths.standardLocations(StandardPaths.DocumentsLocation)[0]
-        nameFilters: ["Текст (*.txt)"]
+        nameFilters: ["Текст (*.txt *.docx)"]
         onAccepted: {
 //            console.log(addFileDialog.fileUrl)
             textEdit.text = fileWrap.addFile(addFileDialog.fileUrl.toString());
@@ -162,13 +162,13 @@ Pane {
                     createInfoDialog.open()
                 }
                 else {
-                    textEdit.text = fileWrap.addFile(createFileDialog.currentFolder + "/" + textField.text )
+                    console.log("1: " + createFileDialog.currentFolder + "/" + textField.text);
+                    textEdit.text = fileWrap.addFile(createFileDialog.currentFolder + "/" + textField.text)
                 }
 //                console.log(createFileDialog.currentFolder + "/" + textField.text)
             } else {
                 infoDialog.open()
             }
-
 //            info(validate(textField.text))
 //            console.log(validate(textField.text))
         }

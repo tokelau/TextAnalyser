@@ -11,7 +11,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QDir>
-#include "textProcessor/include/stdafx.h"
+#include "textProcessor/include_1.0/stdafx.h"
 
 class Files : public QObject
 {
@@ -54,12 +54,6 @@ public:
             return 0;
         }
 
-//        TextProcessor tp(filePath.toStdWString(), (QDir::currentPath() + "/data/dict.txt").toStdWString());
-//        QByteArray arr();
-//        for(std::set<std::wstring>::iterator it = tp.service.begin(); it != tp.service.end(); it++) {
-//            qDebug() << QString::fromStdWString(*it) << endl;
-//        }
-
         setFilesList(filePath);
 
         return 0;
@@ -87,19 +81,29 @@ public:
         list.push_back(fileName);
         list.push_back(QDate::currentDate().toString("dd.MM.yyyy"));
 
-        QString dict = QDir::currentPath() + "/data/dict.txt";
 //        qDebug() << QDir::currentPath();
-        TextProcessor tp(filePath.toStdWString(), dict.toStdWString());
-//        qDebug() << tp.text.clearedText.size();
+//        qDebug() << tp.text.text.size();
+//        qDebug() << tp.debugText.text.size();
+        TextProcessor tp(filePath.toStdWString());
         list.push_back(QString::number(tp.textVolume));
         list.push_back(QString::number(tp.uniqVolume));
         list.push_back(QString::number(tp.lexWealth));
         list.push_back(QString::number(tp.hc1.pos));
-        list.push_back(QString::fromStdWString(tp.hc1.word));
-        list.push_back(QString::fromStdWString(tp.hc1.sent));
+        list.push_back(QString::fromStdString(tp.hc1.word));
+        list.push_back(QString::fromStdString(tp.hc1.sent));
         list.push_back(QString::number(tp.hc2.pos));
-        list.push_back(QString::fromStdWString(tp.hc2.word));
-        list.push_back(QString::fromStdWString(tp.hc2.sent));
+        list.push_back(QString::fromStdString(tp.hc2.word));
+        list.push_back(QString::fromStdString(tp.hc2.sent));
+
+//        list.push_back(QString::number(12));
+//        list.push_back(QString::number(12));
+//        list.push_back(QString::number(12));
+//        list.push_back(QString::number(12));
+//        list.push_back("13");
+//        list.push_back(QString::number(12));
+//        list.push_back(QString::number(12));
+//        list.push_back(QString::number(12));
+//        list.push_back(QString::number(12));
 
 //        filesHash->
         filesHash.insert(filePath, list);
@@ -112,11 +116,17 @@ public:
     }
     bool countByDict(QString fPath, QString dictPath, QString outPath) {
         QString dPath = QDir::currentPath() + "/data/dict.txt";
-        TextProcessor tp(fPath.toStdWString(), dPath.toStdWString());
-        qDebug() << TextProcessor::countByDict(tp, dictPath.toStdWString(), outPath.toStdWString());
+        TextProcessor tp(fPath.toStdWString());
+        TextProcessor::countByDict(tp, dictPath.toStdWString(), outPath.toStdWString());
         return 0;
     }
     
+    static QString getDocxContent(QString fPath) {
+        qDebug() << fPath;
+        TextProcessor tp(fPath.toStdWString());
+        return QString::fromStdString(TextProcessor::getFileContent(fPath.toStdWString()));
+    }
+
     ~Files() {
 //        qDebug() << "destr"<<endl;
         //сохраняем информацию о файле

@@ -12,6 +12,7 @@ Page {
     width: parent.width
     property string fileName: ""
     property string fPath: ""
+    property string fileType: ""
     property bool _clicked: false
 
     function getTextAreaHeight() {
@@ -109,10 +110,17 @@ Page {
                             hoverEnabled: true
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
                             onDoubleClicked: {
+
                                 textEdit.text = fileWrap.getFileContent(path.text);
+                                //console.log("double clicked HERE")
                                 paneItems.visible = false
                                 paneText.visible = true
-                                paneActions.source = "qrc:/actions/editTextActions.qml"
+                                fileType = name.text.split(".")[1]
+                                if (fileType == "txt") {
+                                    paneActions.source = "qrc:/actions/editTextActions.qml"
+                                } else if (fileType == "docx") {
+                                    paneActions.source = "qrc:/actions/editDocxTextAction.qml"
+                                }
                             }
                             onHoveredChanged: {
                                 if (mArea.containsMouse) {
@@ -466,7 +474,7 @@ Page {
 //                                    anchors.top: fName.bottom
                             width: parent.width - 10
                             wrapMode: Label.Wrap
-                            font.pixelSize: 11
+                            font.pixelSize: 14
                             topPadding: 2
                             text: "Словник: " + model.modelData.uniqVol
                         }
@@ -477,7 +485,7 @@ Page {
                             width: parent.width - 10
                             wrapMode: Label.Wrap
         //                    font.bold: true
-                            font.pixelSize: 11
+                            font.pixelSize: 14
                             topPadding: 3
                             text: "Коэфф. лекс. богаства: " + model.modelData.uniqVol + " / √" +
                                   model.modelData.textVol + " = " + model.modelData.lexWealth
@@ -500,7 +508,7 @@ Page {
                             width: parent.width - 10
                             wrapMode: Label.Wrap
         //                    font.bold: true
-                            font.pixelSize: 11
+                            font.pixelSize: 14
         //                    bottomPadding: 5
                             text: "Позиция: " + model.modelData.textVol + " / 1.618 = " +
                                   model.modelData.hc1Pos
@@ -508,14 +516,14 @@ Page {
                         Label {
                             width: parent.width
                             wrapMode: Label.Wrap
-                            font.pixelSize: 11
+                            font.pixelSize: 14
                             text: "Слово: " + model.modelData.hc1Word
                         }
                         Label {
                             width: parent.width - 15
                             wrapMode: Label.Wrap
         //                    font.bold: true
-                            font.pixelSize: 11
+                            font.pixelSize: 14
         //                    bottomPadding: 5
                             text: "Предложение: " + model.modelData.hc1Sent
                         }
@@ -535,17 +543,17 @@ Page {
                             width: parent.width
                             wrapMode: Label.Wrap
         //                    font.bold: true
-                            font.pixelSize: 11
+                            font.pixelSize: 14
         //                    bottomPadding: 5
-                            text: "Позиция: " + model.modelData.textVol + " - " +
-                                  model.modelData.textVol + " / 1.618 = " +
+                            text: "Позиция: " + model.modelData.textVol + " - (" +
+                                  model.modelData.textVol + " / 1.618) = " +
                                   model.modelData.hc2Pos
                         }
                         Label {
                             width: parent.width - 10
                             wrapMode: Label.Wrap
         //                    font.bold: true
-                            font.pixelSize: 11
+                            font.pixelSize: 14
         //                    bottomPadding: 5
                             text: "Слово: " + model.modelData.hc2Word
                         }
@@ -554,7 +562,7 @@ Page {
                             width: parent.width - 15
                             wrapMode: Label.Wrap
         //                    font.bold: true
-                            font.pixelSize: 11
+                            font.pixelSize: 14
         //                    bottomPadding: 5
                             text: "Предложение: " + model.modelData.hc2Sent
                         }
@@ -625,8 +633,9 @@ Page {
                                     font.pixelSize: 12
 
                                     onClicked: {
-                                        //здесь я передала назваие словаря и путь к файлу
+                                        //здесь я передала название словаря и путь к файлу
                                         fileWrap.countByDict(dictName.text, fileWrap.curFile)
+                                        dictWrap.setFilesList(dictName.text)
                                         dictOk.open()
                                     }
                                 }

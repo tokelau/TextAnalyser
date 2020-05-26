@@ -51,7 +51,7 @@ public:
         }
 
         QTextStream stream(file);
-        stream.setCodec("Windows-1251");
+        stream.setCodec("UTF-8");
         QString text = stream.readAll();
         file->close();
 
@@ -71,7 +71,7 @@ public:
         }
 
         QTextStream stream(file);
-        stream.setCodec("Windows-1251");
+        stream.setCodec("UTF-8");
         QString text = stream.readAll();
         file->close();
 
@@ -94,7 +94,7 @@ public:
             QFile* file = new QFile(fName.split("///")[1]);
             if (!file->open(QIODevice::ReadWrite)) {}
             QTextStream stream(file);
-            stream.setCodec("Windows-1251");
+            stream.setCodec("UTF-8");
             QString content = stream.readAll();
             file->close();
 
@@ -102,7 +102,7 @@ public:
             file = new QFile(fPath);
             if (!file->open(QIODevice::WriteOnly)) {}
             QTextStream outStream(file);
-            outStream.setCodec("Windows-1251");
+            outStream.setCodec("UTF-8");
             outStream << content;
             file->close();
         }
@@ -115,7 +115,7 @@ public:
             return -1;
         }
         QTextStream stream(file);
-        stream.setCodec("Windows-1251");
+        stream.setCodec("UTF-8");
         stream << content;
         file->close();
 
@@ -141,11 +141,25 @@ public:
 //        qDebug() << name;
         return d->isDictCreated(name);
     }
+    //нужна, когда мы выбираем словарь и хотим обновить список кнопок только для одного словаря
+    Q_INVOKABLE void setFilesList(const QString& dictName) {
+//        qDebug() << dictName;
+        d->setFilesList(dictName);
+    }
 
+    //отличается от buttonList()!!! возвращает кнопки только одного словаря!!!
     Q_INVOKABLE QVariant getButtonList(QString dictName) {
         QList<QObject*> list;
-        d->setFilesList(dictName);
-        return buttonList();
+//        d->setFilesList(dictName);
+        for(int i = 2; i < d->filesHash.value(dictName).length(); i++) {
+            if (d->filesHash.value(dictName)[i] != "") {
+                list.append(new ButtonItem(d->filesHash.value(dictName)[i]));
+            }
+        }
+
+        m_nButtonList = QVariant::fromValue(list);
+        emit buttonListChanged(m_nButtonList);
+        return m_nButtonList;
     }
 
     //возвращает переменную
@@ -157,7 +171,7 @@ public:
         QList<QObject*> list;
         for (QStack<QString>::iterator it = d->filesStack.begin(); it != d->filesStack.end(); it++) {
             if (!((*it) == "")) {
-//                qDebug() << d->filesStack.size() << (*it) << " " <<d->filesHash.value(*it) <<endl;
+//                qDebug() << (*it) <<endl;
                 list.append(new DictItem(d->filesHash.value(*it)));
             }
         }
@@ -191,7 +205,6 @@ public:
     void setDataList(const QVariant& list) {
         m_nDataList = list;
         emit dataListChanged(m_nDataList);
-//        emit buttonListChanged(m_nButtonList);
     }
     void setButtonList(const QVariant& list) {
         m_nButtonList = list;

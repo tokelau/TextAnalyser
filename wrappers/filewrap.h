@@ -8,6 +8,7 @@
 #include <QTextStream>
 #include <QMap>
 #include <QTextCodec>
+#include <QDesktopServices>
 #include "fileitem.h"
 #include "files.h"
 #include "fileparams.h"
@@ -56,16 +57,22 @@ public:
     Q_INVOKABLE QString getFileContent(const QString& str) {
         QString filePath = getFilePath(str);
 
-        QFile* file = new QFile(filePath);
-        if (!file->open(QIODevice::ReadOnly)) {
-            return "";
-        }
+        if (str.split(".")[1] == "docx") {
+//            QDesktopServices::openUrl(QUrl(str));
+            //qDebug() << "get OK";
+            return f->getDocxContent(str);
+        } else {
+            QFile* file = new QFile(filePath);
+            if (!file->open(QIODevice::ReadOnly)) {
+                return "";
+            }
 
-        QTextStream stream(file);
-        stream.setCodec("Windows-1251");
-        QString text = stream.readAll();
-        file->close();
-        return text;
+            QTextStream stream(file);
+            stream.setCodec("Windows-1251");
+            QString text = stream.readAll();
+            file->close();
+            return text;
+        }
     }
     //есть ли файл в папке?
     Q_INVOKABLE bool isFileCreated(const QString& fPath, const QString& fName) {
@@ -82,15 +89,20 @@ public:
     Q_INVOKABLE QString addFile(const QString& str) {
         QString filePath = getFilePath(str);
 
+        qDebug() << "2: " << filePath;
+
         QFile* file = new QFile(filePath);
         if (!file->open(QIODevice::ReadWrite)) {
             return "";
         }
+
         QString text = file->readAll();
         if (text.isEmpty()) {
         } else {
         }
         file->close();
+
+        qDebug() << "2: " << filePath;
         if (!f->addToFiles(filePath)) {
             emit dataListChanged(dataList());
         }
@@ -146,7 +158,11 @@ public:
         }
 //        qDebug() << "oPath "<< oPath << endl;
         f->countByDict(fPath, dPath, oPath);
+
         emit dataListChanged(m_nDataList);
+    }
+    Q_INVOKABLE void openDocx(const QString& str) {
+        QDesktopServices::openUrl(QUrl(str));
     }
 
     //возвращает переменную

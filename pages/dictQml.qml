@@ -89,7 +89,7 @@ Page {
                         id: rect
                         implicitWidth: getTextAreaWidth() - 30
                         width: getTextAreaWidth() - 30
-                        height: dictWrap.getButtonList(name.text).length !== 0 ? 105 : 70
+                        height: dictWrap.getButtonList(name.text).length !== 0 ? 105 : 70 //может, какую-то функцию другую сюда?
                         radius: 6
 
                         MouseArea {

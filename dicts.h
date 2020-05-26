@@ -22,7 +22,7 @@ class Dicts : public QObject
         }
 
         QTextStream stream(&file);
-        stream.setCodec("Windows-1251");
+        stream.setCodec("UTF-8");
         QString all = stream.readAll();
         QList<QString> lines = all.split("\n");
 //        qDebug() << lines;
@@ -59,7 +59,7 @@ public:
         }
         file.resize(0);
         QTextStream stream(&file);
-        stream.setCodec("Windows-1251");
+        stream.setCodec("UTF-8");
 //        QHash<QString, QList<QString>>::iterator hash = filesHash->begin();
         for(QStack<QString>::iterator it = filesStack.begin(); it != filesStack.end(); it++) {
             if ((*it) != "") {
@@ -95,7 +95,6 @@ public:
         strList.removeAll(".");
         strList.removeAll("..");
 
-        //отсортировать entryList по дате
         qDebug() << "entry list" << strList;
 
         //храним не больше пяти обработанных файлов
@@ -106,7 +105,7 @@ public:
         if (strList.length() > 5) {
             for(int i = 5; i < strList.length(); i++) {
                 QFile f("data/dictionaries/" + fileName + "/files/" + strList[i]);
-                qDebug() << f.fileName();
+//                qDebug() << f.fileName();
                 f.remove();
             }
         }
@@ -120,8 +119,9 @@ public:
         }
         filesHash.insert(fileName, list);
 
-        if (filesStack.size() > 10) {
-            for(int i = 10;  filesStack.size() != i;) {
+        //?
+        if (filesStack.size() > 50) {
+            for(int i = 50;  filesStack.size() != i;) {
                 if (filesStack[i] != "") {
                     QFile file("data/dictionaries/" + filesStack[i]);
 //                    qDebug()  << file.fileName() << " " << filesStack.size();
@@ -143,7 +143,7 @@ public:
         file.resize(0);
 
         QTextStream stream(&file);
-        stream.setCodec("Windows-1251");
+        stream.setCodec("UTF-8");
 //        QHash<QString, QList<QString>>::iterator hash = filesHash->begin();
         for(QStack<QString>::iterator it = filesStack.begin(); it != filesStack.end(); it++) {
             stream << filesHash.value((*it)).join("&&?") << endl;
